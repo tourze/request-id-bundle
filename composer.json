@@ -12,6 +12,8 @@
     "symfony/uid": "^6.4",
     "symfony/framework-bundle": "^6.4",
     "symfony/config": "^6.4",
+    "symfony/event-dispatcher": "^6.4",
+    "symfony/http-kernel": "^6.4",
     "symfony/dependency-injection": "^6.4",
     "symfony/http-foundation": "^6.4",
     "symfony/service-contracts": "^2.5 || ^3",

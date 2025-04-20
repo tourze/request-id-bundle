@@ -25,6 +25,11 @@
       "RequestIdBundle\\": "src"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "RequestIdBundle\\Tests\\": "tests"
+    }
+  },
   "require-dev": {
     "phpunit/phpunit": "^10.0",
     "phpstan/phpstan": "^2.1"

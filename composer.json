@@ -17,7 +17,7 @@
     "symfony/dependency-injection": "^6.4",
     "symfony/http-foundation": "^6.4",
     "symfony/service-contracts": "^3",
-    "monolog/monolog": "^3.0",
+    "monolog/monolog": "^3.1",
     "tourze/backtrace-helper": "~0.0.5"
   },
   "autoload": {

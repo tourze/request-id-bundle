@@ -16,7 +16,7 @@
     "symfony/http-kernel": "^6.4",
     "symfony/dependency-injection": "^6.4",
     "symfony/http-foundation": "^6.4",
-    "symfony/service-contracts": "^2.5 || ^3",
+    "symfony/service-contracts": "^3",
     "monolog/monolog": "^3.0",
     "tourze/backtrace-helper": "~0.0.5"
   },

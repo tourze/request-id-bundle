@@ -1,101 +1,165 @@
 # RequestIdBundle
 
-一个基于 Symfony 的请求 ID 管理包,用于在整个应用程序中跟踪和关联请求。支持 HTTP 请求、消息队列和命令行命令。
+[English](README.md) | [中文](README.zh-CN.md)
 
-## 依赖
+[![Latest Version](https://img.shields.io/packagist/v/tourze/request-id-bundle.svg?style=flat-square)](https://packagist.org/packages/tourze/request-id-bundle)
+[![Build Status](https://img.shields.io/travis/tourze/request-id-bundle/master.svg?style=flat-square)](https://travis-ci.org/tourze/request-id-bundle)
+[![Quality Score](https://img.shields.io/scrutinizer/g/tourze/request-id-bundle.svg?style=flat-square)](https://scrutinizer-ci.com/g/tourze/request-id-bundle)
+[![Total Downloads](https://img.shields.io/packagist/dt/tourze/request-id-bundle.svg?style=flat-square)](https://packagist.org/packages/tourze/request-id-bundle)
 
-- AopCoroutineBundle
+A Symfony bundle for request ID management, enabling tracking and correlation of requests across your application. Supports HTTP, message queue, and CLI commands for comprehensive request tracing in distributed systems.
 
-## 核心功能
+## Features
 
-### 1. 请求 ID 生成和存储
+- Generate unique request IDs using UUID with Base58 encoding (shorter than standard UUID format)
+- Coroutine-safe request ID storage with automatic reset mechanism to prevent memory leaks
+- Automatically add request ID to HTTP request/response headers
+- Propagate request ID in message queues via Symfony Messenger middleware
+- Generate request ID for CLI commands with special "CLI" prefix
+- Integrate request ID into logs automatically via Monolog processor
+- Support distributed system tracing across different services
 
-- 基于 UUID 的请求 ID 生成(使用 Base58 编码以获得更短的 ID)
-- 协程安全的请求 ID 存储
-- 自动重置机制
+## Installation
 
-### 2. HTTP 请求集成
+```bash
+composer require tourze/request-id-bundle
+```
 
-自动在 HTTP 请求和响应中添加请求 ID:
+**Requirements:**
+
+- PHP >= 8.1
+- Symfony >= 6.4
+- Symfony components: HTTP Kernel, Messenger, Console, Uid
+- Monolog >= 3.1
+- See composer.json for complete dependencies
+
+## Quick Start
+
+### 1. Configuration
 
 ```yaml
 # config/packages/request_id.yaml
 request_id:
-    request_header: 'Request-Id'  # 默认
-    response_header: 'Request-Id' # 默认
-    trust_request: true          # 是否信任请求中的 ID
+    request_header: 'Request-Id'   # HTTP header to check for incoming request ID
+    response_header: 'Request-Id'  # HTTP header to return request ID
+    trust_request: true            # whether to trust incoming request ID
 ```
 
-### 3. 消息队列集成
+### 2. HTTP Integration
 
-自动在消息队列中传递请求 ID:
+The bundle automatically:
+
+- Checks for request ID in incoming HTTP headers
+- Generates new ID if none exists or not trusted
+- Sets ID in response headers
+- Stores ID in coroutine-safe storage
 
 ```php
-// 消息会自动携带当前请求的 ID
+// In your controllers, you can access the request ID:
+use RequestIdBundle\Service\RequestIdStorage;
+
+class MyController
+{
+    public function index(RequestIdStorage $requestIdStorage)
+    {
+        $currentRequestId = $requestIdStorage->getRequestId();
+        // Use the request ID...
+    }
+}
+```
+
+### 3. Message Queue Integration
+
+Request IDs are automatically propagated through message queues:
+
+```php
+// The message will automatically carry the current request ID
 $messageBus->dispatch(new MyMessage());
 
-// 在消费者中可以访问原始请求的 ID
-$requestId = $requestIdStorage->getRequestId();
+// In message handlers, the original request ID is available:
+public function handleMessage(MyMessage $message, RequestIdStorage $requestIdStorage)
+{
+    $originalRequestId = $requestIdStorage->getRequestId();
+    // Process with original request context...
+}
 ```
 
-### 4. 命令行支持
+### 4. CLI Support
 
-为命令行命令生成唯一的请求 ID:
+CLI commands automatically get request IDs with a "CLI" prefix:
 
 ```bash
-# 执行命令时会自动生成类似 "CLIxxxxx" 的请求 ID
 $ php bin/console my:command
+# A request ID like "CLIxxxxx" will be generated automatically
 ```
-
-### 5. 日志集成
-
-自动在日志记录中包含请求 ID:
 
 ```php
-// 日志中会自动包含请求 ID
-$logger->info('Something happened');
+// In your commands:
+use RequestIdBundle\Service\RequestIdStorage;
+
+class MyCommand extends Command
+{
+    private RequestIdStorage $requestIdStorage;
+
+    public function __construct(RequestIdStorage $requestIdStorage)
+    {
+        $this->requestIdStorage = $requestIdStorage;
+        parent::__construct();
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $commandRequestId = $this->requestIdStorage->getRequestId(); // CLI[uuid]
+        // Use request ID...
+    }
+}
 ```
 
-## 工作原理
+### 5. Log Integration
 
-1. HTTP 请求:
-   - 检查请求头中是否存在请求 ID
-   - 如果存在且配置为信任,则使用该 ID
-   - 否则生成新的请求 ID
-   - 在响应头中返回请求 ID
+Request IDs are automatically added to log records:
 
-2. 消息队列:
-   - 发送消息时自动添加 RequestIdStamp
-   - 消费消息时恢复原始请求 ID
-   - 消费完成后自动清理
+```php
+$logger->info('Processing user request', ['user_id' => 123]);
+// Log output will include "request_id": "7fT9P5RoJ3a..."
+```
 
-3. 命令行:
-   - 命令开始时生成带 "CLI" 前缀的请求 ID
-   - 命令结束时自动清理
+## How It Works
 
-## 性能优化
+For a detailed workflow diagram, see [WORKFLOW.md](WORKFLOW.md).
 
-1. 使用 Base58 编码生成更短的 ID
-2. 协程支持,确保线程安全
-3. 自动清理机制,防止内存泄漏
+1. **HTTP Requests:**
+   - `RequestIdSubscriber` handles request/response events
+   - Checks if request ID exists in headers
+   - Uses existing ID if trusted, otherwise generates new one
+   - Adds ID to response headers
 
-## 重要说明
+2. **Message Queue:**
+   - `RequestIdMiddleware` intercepts message dispatching/handling
+   - Attaches `RequestIdStamp` to outgoing messages
+   - Restores original request ID when consuming messages
+   - Cleans up after message handling
 
-1. 请求 ID 格式:
-   - HTTP: UUID Base58 编码
-   - CLI: "CLI" + UUID Base58 编码
-2. 存储机制基于协程,确保请求隔离
-3. 自动集成到 Symfony 的日志系统
-4. 支持分布式系统中的请求跟踪
+3. **CLI Commands:**
+   - `CommandRequestIdSubscriber` generates "CLI"-prefixed request ID
+   - Sets ID at command start
+   - Cleans up at command termination
 
-## 调试建议
+4. **Log Integration:**
+   - `RequestIdProcessor` adds request ID to all log records
+   - Makes request ID available in log formatters and outputs
 
-1. 检查请求/响应头中的请求 ID
-2. 在日志中搜索特定请求 ID
-3. 使用请求 ID 关联消息队列任务
+## Performance Optimization
 
-## 扩展开发
+- Uses Base58 encoding for shorter IDs than standard UUIDs
+- Coroutine support ensures thread safety in async environments
+- Automatic cleanup prevents memory leaks in long-running processes
+- Middleware approach avoids performance impact on non-request paths
 
-1. 自定义请求 ID 生成器
-2. 添加额外的请求 ID 传播机制
-3. 扩展日志处理器功能
+## Contributing
+
+Contributions are welcome! Please see our [contribution guidelines](https://github.com/tourze/request-id-bundle/blob/master/.github/CONTRIBUTING.md) for details.
+
+## License
+
+The MIT License (MIT). Please see [License File](LICENSE) for more information.

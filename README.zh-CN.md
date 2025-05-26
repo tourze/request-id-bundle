@@ -35,17 +35,7 @@ composer require tourze/request-id-bundle
 
 ## 快速开始
 
-### 1. 配置
-
-```yaml
-# config/packages/request_id.yaml
-request_id:
-    request_header: 'Request-Id'  # 检查传入请求 ID 的 HTTP 头
-    response_header: 'Request-Id' # 返回请求 ID 的 HTTP 头
-    trust_request: true           # 是否信任传入的请求 ID
-```
-
-### 2. HTTP 请求集成
+### 1. HTTP 请求集成
 
 该包会自动：
 
@@ -68,7 +58,7 @@ class MyController
 }
 ```
 
-### 3. 消息队列集成
+### 2. 消息队列集成
 
 请求 ID 会自动通过消息队列传播：
 
@@ -84,7 +74,7 @@ public function handleMessage(MyMessage $message, RequestIdStorage $requestIdSto
 }
 ```
 
-### 4. 命令行支持
+### 3. 命令行支持
 
 命令行命令会自动获得带有 "CLI" 前缀的请求 ID：
 
@@ -115,7 +105,7 @@ class MyCommand extends Command
 }
 ```
 
-### 5. 日志集成
+### 4. 日志集成
 
 请求 ID 会自动添加到日志记录中：
 

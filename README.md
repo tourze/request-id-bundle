@@ -35,17 +35,7 @@ composer require tourze/request-id-bundle
 
 ## Quick Start
 
-### 1. Configuration
-
-```yaml
-# config/packages/request_id.yaml
-request_id:
-    request_header: 'Request-Id'   # HTTP header to check for incoming request ID
-    response_header: 'Request-Id'  # HTTP header to return request ID
-    trust_request: true            # whether to trust incoming request ID
-```
-
-### 2. HTTP Integration
+### 1. HTTP Integration
 
 The bundle automatically:
 
@@ -68,7 +58,7 @@ class MyController
 }
 ```
 
-### 3. Message Queue Integration
+### 2. Message Queue Integration
 
 Request IDs are automatically propagated through message queues:
 
@@ -84,7 +74,7 @@ public function handleMessage(MyMessage $message, RequestIdStorage $requestIdSto
 }
 ```
 
-### 4. CLI Support
+### 3. CLI Support
 
 CLI commands automatically get request IDs with a "CLI" prefix:
 
@@ -115,7 +105,7 @@ class MyCommand extends Command
 }
 ```
 
-### 5. Log Integration
+### 4. Log Integration
 
 Request IDs are automatically added to log records:
 

@@ -33,7 +33,7 @@ final class RequestIdProcessor implements ProcessorInterface
 
     public function __invoke(LogRecord $record): LogRecord
     {
-        if ($id = $this->storage->getRequestId()) {
+        if (!empty($id = $this->storage->getRequestId())) {
             $record->extra['request_id'] = $id;
         }
 

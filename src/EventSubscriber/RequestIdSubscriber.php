@@ -38,14 +38,14 @@ class RequestIdSubscriber implements EventSubscriberInterface
 
         // always give the incoming request priority. If it has the ID in
         // its headers already put that into our ID storage.
-        if ($this->trustRequest && ($id = $req->headers->get($this->requestHeader))) {
+        if ($this->trustRequest && !empty($id = $req->headers->get($this->requestHeader))) {
             $this->idStorage->setRequestId($id);
             return;
         }
 
         // similarly, if the request ID storage already has an ID set we
         // don't need to do anything other than put it into the request headers
-        if ($id = $this->idStorage->getRequestId()) {
+        if (!empty($id = $this->idStorage->getRequestId())) {
             $req->headers->set($this->requestHeader, $id);
             return;
         }
@@ -61,7 +61,7 @@ class RequestIdSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if ($id = $this->idStorage->getRequestId()) {
+        if (!empty($id = $this->idStorage->getRequestId())) {
             $event->getResponse()->headers->set($this->responseHeader, $id);
         }
     }

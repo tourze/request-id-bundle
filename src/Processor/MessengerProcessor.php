@@ -39,7 +39,7 @@ class MessengerProcessor implements ProcessorInterface, EventSubscriberInterface
     {
         /** @var RequestIdStamp|null $requestIdStamp */
         $requestIdStamp = $event->getEnvelope()->last(RequestIdStamp::class);
-        if ($requestIdStamp) {
+        if ($requestIdStamp !== null) {
             $this->requestIdStorage->setRequestId($requestIdStamp->getRequestId());
         }
     }

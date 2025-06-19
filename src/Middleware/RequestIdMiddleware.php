@@ -21,8 +21,8 @@ class RequestIdMiddleware implements MiddlewareInterface
 
     public function handle(Envelope $envelope, StackInterface $stack): Envelope
     {
-        if (!$envelope->last(ConsumedByWorkerStamp::class) || !$requestIdStamp = $envelope->last(RequestIdStamp::class)) {
-            if ($this->requestIdStorage->getRequestId()) {
+        if ($envelope->last(ConsumedByWorkerStamp::class) === null || ($requestIdStamp = $envelope->last(RequestIdStamp::class)) === null) {
+            if (!empty($this->requestIdStorage->getRequestId())) {
                 $envelope = $envelope->with(new RequestIdStamp($this->requestIdStorage->getRequestId()));
             }
 

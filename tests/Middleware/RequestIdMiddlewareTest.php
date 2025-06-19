@@ -31,7 +31,7 @@ class RequestIdMiddlewareTest extends TestCase
             ->willReturn($stack);
         $stack->expects($this->any())
             ->method('handle')
-            ->willReturnCallback(function (Envelope $envelope) use ($self) {
+            ->willReturnCallback(function (Envelope $envelope) {
                 return $envelope;
             });
         

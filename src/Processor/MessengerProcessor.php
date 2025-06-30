@@ -14,8 +14,8 @@ use Symfony\Component\Messenger\Event\WorkerRunningEvent;
 /**
  * 定时任务时，传递requestId
  */
-#[AutoconfigureTag('monolog.processor')]
-#[AutoconfigureTag('as-coroutine')]
+#[AutoconfigureTag(name: 'monolog.processor')]
+#[AutoconfigureTag(name: 'as-coroutine')]
 class MessengerProcessor implements ProcessorInterface, EventSubscriberInterface
 {
     public function __construct(

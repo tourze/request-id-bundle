@@ -8,7 +8,7 @@ use Symfony\Contracts\Service\ResetInterface;
 /**
  * 在非 FPM 环境下，声明这个服务需要 reset
  */
-#[AutoconfigureTag('as-coroutine')]
+#[AutoconfigureTag(name: 'as-coroutine')]
 class RequestIdStorage implements ResetInterface
 {
     private ?string $requestId = null;

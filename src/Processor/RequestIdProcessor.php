@@ -24,7 +24,7 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
  *
  * @since   1.0
  */
-#[AutoconfigureTag('monolog.processor')]
+#[AutoconfigureTag(name: 'monolog.processor')]
 final class RequestIdProcessor implements ProcessorInterface
 {
     public function __construct(private readonly RequestIdStorage $storage)

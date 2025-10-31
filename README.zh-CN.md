@@ -3,8 +3,11 @@
 [English](README.md) | [中文](README.zh-CN.md)
 
 [![Latest Version](https://img.shields.io/packagist/v/tourze/request-id-bundle.svg?style=flat-square)](https://packagist.org/packages/tourze/request-id-bundle)
+[![PHP Version](https://img.shields.io/packagist/php-v/tourze/request-id-bundle.svg?style=flat-square)](https://packagist.org/packages/tourze/request-id-bundle)
+[![License](https://img.shields.io/packagist/l/tourze/request-id-bundle.svg?style=flat-square)](https://packagist.org/packages/tourze/request-id-bundle)
 [![Build Status](https://img.shields.io/travis/tourze/request-id-bundle/master.svg?style=flat-square)](https://travis-ci.org/tourze/request-id-bundle)
 [![Quality Score](https://img.shields.io/scrutinizer/g/tourze/request-id-bundle.svg?style=flat-square)](https://scrutinizer-ci.com/g/tourze/request-id-bundle)
+[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/tourze/request-id-bundle.svg?style=flat-square)](https://scrutinizer-ci.com/g/tourze/request-id-bundle/?branch=master)
 [![Total Downloads](https://img.shields.io/packagist/dt/tourze/request-id-bundle.svg?style=flat-square)](https://packagist.org/packages/tourze/request-id-bundle)
 
 一个基于 Symfony 的请求 ID 管理包，用于在整个应用程序中跟踪和关联请求。支持 HTTP 请求、消息队列和命令行命令，为分布式系统提供全面的请求追踪能力。
@@ -119,25 +122,25 @@ $logger->info('处理用户请求', ['user_id' => 123]);
 详细的工作流程图，请参阅 [WORKFLOW.md](WORKFLOW.md)。
 
 1. **HTTP 请求：**
-   - `RequestIdSubscriber` 处理请求/响应事件
-   - 检查请求头中是否存在请求 ID
-   - 如果被信任则使用现有 ID，否则生成新 ID
-   - 在响应头中添加 ID
+    - `RequestIdSubscriber` 处理请求/响应事件
+    - 检查请求头中是否存在请求 ID
+    - 如果被信任则使用现有 ID，否则生成新 ID
+    - 在响应头中添加 ID
 
 2. **消息队列：**
-   - `RequestIdMiddleware` 拦截消息的分发/处理
-   - 为发出的消息附加 `RequestIdStamp`
-   - 在消费消息时恢复原始请求 ID
-   - 处理完消息后进行清理
+    - `RequestIdMiddleware` 拦截消息的分发/处理
+    - 为发出的消息附加 `RequestIdStamp`
+    - 在消费消息时恢复原始请求 ID
+    - 处理完消息后进行清理
 
 3. **命令行命令：**
-   - `CommandRequestIdSubscriber` 生成带有 "CLI" 前缀的请求 ID
-   - 在命令开始时设置 ID
-   - 在命令终止时进行清理
+    - `CommandRequestIdSubscriber` 生成带有 "CLI" 前缀的请求 ID
+    - 在命令开始时设置 ID
+    - 在命令终止时进行清理
 
 4. **日志集成：**
-   - `RequestIdProcessor` 为所有日志记录添加请求 ID
-   - 使请求 ID 在日志格式化程序和输出中可用
+    - `RequestIdProcessor` 为所有日志记录添加请求 ID
+    - 使请求 ID 在日志格式化程序和输出中可用
 
 ## 性能优化
 

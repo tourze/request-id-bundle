@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RequestIdBundle\Processor;
 
 use Monolog\LogRecord;
@@ -16,7 +18,7 @@ use Symfony\Component\Messenger\Event\WorkerRunningEvent;
  */
 #[AutoconfigureTag(name: 'monolog.processor')]
 #[AutoconfigureTag(name: 'as-coroutine')]
-class MessengerProcessor implements ProcessorInterface, EventSubscriberInterface
+class MessengerEventSubscriber implements ProcessorInterface, EventSubscriberInterface
 {
     public function __construct(
         private readonly RequestIdStorage $requestIdStorage,
@@ -37,9 +39,9 @@ class MessengerProcessor implements ProcessorInterface, EventSubscriberInterface
 
     public function onWorkerMessageReceived(WorkerMessageReceivedEvent $event): void
     {
-        /** @var RequestIdStamp|null $requestIdStamp */
         $requestIdStamp = $event->getEnvelope()->last(RequestIdStamp::class);
-        if ($requestIdStamp !== null) {
+        assert($requestIdStamp instanceof RequestIdStamp || null === $requestIdStamp);
+        if (null !== $requestIdStamp) {
             $this->requestIdStorage->setRequestId($requestIdStamp->getRequestId());
         }
     }

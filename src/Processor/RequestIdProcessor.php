@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /*
  * This file is part of chrisguitarguy/request-id-bundle
@@ -19,8 +21,7 @@ use RequestIdBundle\Service\RequestIdStorage;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
 /**
- * Adds the request ID to the Monolog record's `extra` key so it can be used
- * in formatters, etc.
+ * 将 request ID 添加到 Monolog record 的 `extra` 键中，以便在 formatters 等地方使用
  *
  * @since   1.0
  */
@@ -33,7 +34,7 @@ final class RequestIdProcessor implements ProcessorInterface
 
     public function __invoke(LogRecord $record): LogRecord
     {
-        if (!empty($id = $this->storage->getRequestId())) {
+        if (($id = $this->storage->getRequestId()) !== null && '' !== $id) {
             $record->extra['request_id'] = $id;
         }
 

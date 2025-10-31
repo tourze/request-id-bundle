@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RequestIdBundle\EventSubscriber;
 
 use RequestIdBundle\Service\RequestIdGenerator;

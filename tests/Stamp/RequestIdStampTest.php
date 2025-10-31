@@ -1,11 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RequestIdBundle\Tests\Stamp;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use RequestIdBundle\Stamp\RequestIdStamp;
 
-class RequestIdStampTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(RequestIdStamp::class)]
+final class RequestIdStampTest extends TestCase
 {
     public function testConstructorAndGetter(): void
     {

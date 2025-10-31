@@ -11,7 +11,7 @@
 | CommandRequestIdSubscriber | ✅ 完成 | `tests/EventSubscriber/CommandRequestIdSubscriberTest.php` |
 | RequestIdMiddleware | ✅ 完成 | `tests/Middleware/RequestIdMiddlewareTest.php` |
 | RequestIdProcessor | ✅ 完成 | `tests/Processor/RequestIdProcessorTest.php` |
-| MessengerProcessor | ⚠️ 部分测试，事件处理需要重构 | `tests/Processor/MessengerProcessorTest.php` |
+| MessengerEventSubscriber | ⚠️ 部分测试，事件处理需要重构 | `tests/Processor/MessengerEventSubscriberTest.php` |
 | RequestIdStamp | ✅ 完成 | `tests/Stamp/RequestIdStampTest.php` |
 
 ## 测试覆盖范围
@@ -29,7 +29,7 @@
 
 - 处理器
   - ✅ RequestIdProcessor 测试了日志记录中 ID 处理
-  - ⚠️ MessengerProcessor 测试了基本功能和接口，但由于 Symfony 的 final 类限制，事件处理方法未能完全测试
+  - ⚠️ MessengerEventSubscriber 测试了基本功能和接口，但由于 Symfony 的 final 类限制，事件处理方法未能完全测试
 
 - 其他
   - ✅ RequestIdStamp 测试了消息队列中请求 ID 的转发功能

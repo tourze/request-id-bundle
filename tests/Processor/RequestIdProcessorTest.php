@@ -1,40 +1,48 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RequestIdBundle\Tests\Processor;
 
+use Monolog\Level;
 use Monolog\LogRecord;
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use RequestIdBundle\Processor\RequestIdProcessor;
 use RequestIdBundle\Service\RequestIdStorage;
+use Tourze\PHPUnitSymfonyKernelTest\AbstractIntegrationTestCase;
 
-class RequestIdProcessorTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(RequestIdProcessor::class)]
+#[RunTestsInSeparateProcesses]
+final class RequestIdProcessorTest extends AbstractIntegrationTestCase
 {
-    private RequestIdStorage $storage;
-    private RequestIdProcessor $processor;
-
-    protected function setUp(): void
+    protected function onSetUp(): void
     {
-        $this->storage = new RequestIdStorage();
-        $this->processor = new RequestIdProcessor($this->storage);
     }
 
     public function testInvokeWithRequestId(): void
     {
+        $storage = self::getService(RequestIdStorage::class);
+        $processor = self::getService(RequestIdProcessor::class);
+
         // 设置请求 ID
-        $this->storage->setRequestId('test-request-id');
+        $storage->setRequestId('test-request-id');
 
         // 创建日志记录
         $record = new LogRecord(
             new \DateTimeImmutable(),
             'channel',
-            \Monolog\Level::Info,
+            Level::Info,
             'message',
             [],
             []
         );
 
         // 调用处理器
-        $processedRecord = $this->processor->__invoke($record);
+        $processedRecord = $processor->__invoke($record);
 
         // 验证结果中包含请求 ID
         $this->assertArrayHasKey('request_id', $processedRecord->extra);
@@ -43,21 +51,24 @@ class RequestIdProcessorTest extends TestCase
 
     public function testInvokeWithoutRequestId(): void
     {
+        $storage = self::getService(RequestIdStorage::class);
+        $processor = self::getService(RequestIdProcessor::class);
+
         // 不设置请求 ID
-        $this->storage->setRequestId(null);
+        $storage->setRequestId(null);
 
         // 创建日志记录
         $record = new LogRecord(
             new \DateTimeImmutable(),
             'channel',
-            \Monolog\Level::Info,
+            Level::Info,
             'message',
             [],
             []
         );
 
         // 调用处理器
-        $processedRecord = $this->processor->__invoke($record);
+        $processedRecord = $processor->__invoke($record);
 
         // 验证结果中不包含请求 ID
         $this->assertArrayNotHasKey('request_id', $processedRecord->extra);

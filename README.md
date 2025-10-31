@@ -3,8 +3,11 @@
 [English](README.md) | [中文](README.zh-CN.md)
 
 [![Latest Version](https://img.shields.io/packagist/v/tourze/request-id-bundle.svg?style=flat-square)](https://packagist.org/packages/tourze/request-id-bundle)
+[![PHP Version](https://img.shields.io/packagist/php-v/tourze/request-id-bundle.svg?style=flat-square)](https://packagist.org/packages/tourze/request-id-bundle)
+[![License](https://img.shields.io/packagist/l/tourze/request-id-bundle.svg?style=flat-square)](https://packagist.org/packages/tourze/request-id-bundle)
 [![Build Status](https://img.shields.io/travis/tourze/request-id-bundle/master.svg?style=flat-square)](https://travis-ci.org/tourze/request-id-bundle)
 [![Quality Score](https://img.shields.io/scrutinizer/g/tourze/request-id-bundle.svg?style=flat-square)](https://scrutinizer-ci.com/g/tourze/request-id-bundle)
+[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/tourze/request-id-bundle.svg?style=flat-square)](https://scrutinizer-ci.com/g/tourze/request-id-bundle/?branch=master)
 [![Total Downloads](https://img.shields.io/packagist/dt/tourze/request-id-bundle.svg?style=flat-square)](https://packagist.org/packages/tourze/request-id-bundle)
 
 A Symfony bundle for request ID management, enabling tracking and correlation of requests across your application. Supports HTTP, message queue, and CLI commands for comprehensive request tracing in distributed systems.
@@ -119,25 +122,25 @@ $logger->info('Processing user request', ['user_id' => 123]);
 For a detailed workflow diagram, see [WORKFLOW.md](WORKFLOW.md).
 
 1. **HTTP Requests:**
-   - `RequestIdSubscriber` handles request/response events
-   - Checks if request ID exists in headers
-   - Uses existing ID if trusted, otherwise generates new one
-   - Adds ID to response headers
+    - `RequestIdSubscriber` handles request/response events
+    - Checks if request ID exists in headers
+    - Uses existing ID if trusted, otherwise generates new one
+    - Adds ID to response headers
 
 2. **Message Queue:**
-   - `RequestIdMiddleware` intercepts message dispatching/handling
-   - Attaches `RequestIdStamp` to outgoing messages
-   - Restores original request ID when consuming messages
-   - Cleans up after message handling
+    - `RequestIdMiddleware` intercepts message dispatching/handling
+    - Attaches `RequestIdStamp` to outgoing messages
+    - Restores original request ID when consuming messages
+    - Cleans up after message handling
 
 3. **CLI Commands:**
-   - `CommandRequestIdSubscriber` generates "CLI"-prefixed request ID
-   - Sets ID at command start
-   - Cleans up at command termination
+    - `CommandRequestIdSubscriber` generates "CLI"-prefixed request ID
+    - Sets ID at command start
+    - Cleans up at command termination
 
 4. **Log Integration:**
-   - `RequestIdProcessor` adds request ID to all log records
-   - Makes request ID available in log formatters and outputs
+    - `RequestIdProcessor` adds request ID to all log records
+    - Makes request ID available in log formatters and outputs
 
 ## Performance Optimization
 

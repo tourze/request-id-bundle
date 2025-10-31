@@ -1,15 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RequestIdBundle\Tests\Service;
 
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use RequestIdBundle\Service\RequestIdStorage;
+use Tourze\PHPUnitSymfonyKernelTest\AbstractIntegrationTestCase;
 
-class RequestIdStorageTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(RequestIdStorage::class)]
+#[RunTestsInSeparateProcesses]
+final class RequestIdStorageTest extends AbstractIntegrationTestCase
 {
+    protected function onSetUp(): void
+    {
+    }
+
     public function testGetAndSetRequestId(): void
     {
-        $storage = new RequestIdStorage();
+        $storage = self::getService(RequestIdStorage::class);
 
         // 初始状态应该是 null
         $this->assertNull($storage->getRequestId());
@@ -25,7 +38,7 @@ class RequestIdStorageTest extends TestCase
 
     public function testReset(): void
     {
-        $storage = new RequestIdStorage();
+        $storage = self::getService(RequestIdStorage::class);
         $storage->setRequestId('test-id');
 
         // 重置后应该恢复为 null

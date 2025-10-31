@@ -1,16 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RequestIdBundle\Stamp;
 
 use Symfony\Component\Messenger\Stamp\StampInterface;
 
 class RequestIdStamp implements StampInterface
 {
-    private string $requestId;
-
-    public function __construct(string $requestId)
+    public function __construct(private readonly string $requestId)
     {
-        $this->requestId = $requestId;
     }
 
     public function getRequestId(): string

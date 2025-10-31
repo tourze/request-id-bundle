@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RequestIdBundle\Service;
 
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RequestIdBundle\Service;
 
 use Symfony\Component\Uid\Factory\UuidFactory;
@@ -11,11 +13,10 @@ class RequestIdGenerator
 {
     public function __construct(
         private readonly UuidFactory $factory,
-    )
-    {
+    ) {
     }
 
-    public function generate() : string
+    public function generate(): string
     {
         return $this->factory->create()->toBase58();
     }

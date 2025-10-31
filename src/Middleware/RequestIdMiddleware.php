@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RequestIdBundle\Middleware;
 
 use RequestIdBundle\Service\RequestIdStorage;
@@ -21,9 +23,9 @@ class RequestIdMiddleware implements MiddlewareInterface
 
     public function handle(Envelope $envelope, StackInterface $stack): Envelope
     {
-        if ($envelope->last(ConsumedByWorkerStamp::class) === null || ($requestIdStamp = $envelope->last(RequestIdStamp::class)) === null) {
-            if (!empty($this->requestIdStorage->getRequestId())) {
-                $envelope = $envelope->with(new RequestIdStamp($this->requestIdStorage->getRequestId()));
+        if (null === $envelope->last(ConsumedByWorkerStamp::class) || ($requestIdStamp = $envelope->last(RequestIdStamp::class)) === null) {
+            if (($requestId = $this->requestIdStorage->getRequestId()) !== null && '' !== $requestId) {
+                $envelope = $envelope->with(new RequestIdStamp($requestId));
             }
 
             return $stack->next()->handle($envelope, $stack);

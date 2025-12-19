@@ -6,7 +6,7 @@ namespace RequestIdBundle\DependencyInjection;
 
 use Tourze\SymfonyDependencyServiceLoader\AutoExtension;
 
-class RequestIdExtension extends AutoExtension
+final class RequestIdExtension extends AutoExtension
 {
     protected function getConfigDir(): string
     {
